@@ -7,9 +7,10 @@ import java.util.Optional;
 public interface AccountService {
     List<Account> findAll();
 
-    Optional<Account> findById(Integer integer);
+//    Optional<Account> findById(Integer integer);
     Account save(Account ac);
     void deleteById(Integer integer);
     Account updateAc(Integer id , Account ac);
+
 
 }

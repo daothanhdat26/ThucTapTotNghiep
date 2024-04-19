@@ -25,6 +25,13 @@ public class Account {
     @Column(name = "full_name")
     private String full_name;
 
+    public Account(String user_password, String user_email, String user_type, String full_name) {
+        this.user_password = user_password;
+        this.user_email = user_email;
+        this.user_type = user_type;
+        this.full_name = full_name;
+    }
+
     public int getUser_id() {
         return user_id;
     }
@@ -72,4 +79,5 @@ public class Account {
     public void setFull_name(String full_name) {
         this.full_name = full_name;
     }
+
 }

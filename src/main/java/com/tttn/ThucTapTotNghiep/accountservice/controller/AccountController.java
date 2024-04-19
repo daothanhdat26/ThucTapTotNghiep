@@ -16,33 +16,35 @@ import java.util.Optional;
 @RequestMapping("/api/account")
 public class AccountController {
     @Autowired
-    private  AccountService accountService;
+    private AccountService accountService;
 
     @GetMapping
     public ResponseEntity<List<Account>> showAccount() {
         return ResponseEntity.ok().body(accountService.findAll());
     }
+
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody Account ac) {
         Account account = accountService.save(ac);
         return ResponseEntity.ok(account);
     }
-//    @DeleteMapping("/{id}")
+
+    //    @DeleteMapping("/{id}")
 //    public ResponseEntity<String> deleteHAccountById(@PathVariable Integer id) {
 //        accountService.deleteById(id);
 //        return ResponseEntity.ok("Da xoa tai khoan voi id la" + id);
 //
 //
 //    }
-@DeleteMapping("/{id}")
-public ResponseEntity<String> deleteHAccountById(@PathVariable Integer id) {
-    try {
-        accountService.deleteById(id);
-        return ResponseEntity.ok("Đã xóa tài khoản có id là " + id);
-    } catch (Exception e) {
-        return ResponseEntity.status(500).body("Lỗi trong quá trình xóa tài khoản");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteHAccountById(@PathVariable Integer id) {
+        try {
+            accountService.deleteById(id);
+            return ResponseEntity.ok("Đã xóa tài khoản có id là " + id);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình xóa tài khoản");
+        }
     }
-}
 
 
     @PutMapping("/{id}")
@@ -50,9 +52,9 @@ public ResponseEntity<String> deleteHAccountById(@PathVariable Integer id) {
         try {
 //            account.setUser_id(id);
 //            accountService.save(account);
-            Account ac= accountService.updateAc(id,account);
+            Account ac = accountService.updateAc(id, account);
             return ResponseEntity.ok("Đã sửa tài khoản có id là " + id);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(500).body("Lỗi trong quá trình cập nhật tài khoản");
         }
     }

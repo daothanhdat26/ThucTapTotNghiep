@@ -29,13 +29,7 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
-    //    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteHAccountById(@PathVariable Integer id) {
-//        accountService.deleteById(id);
-//        return ResponseEntity.ok("Da xoa tai khoan voi id la" + id);
-//
-//
-//    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteHAccountById(@PathVariable Integer id) {
         try {
@@ -50,8 +44,7 @@ public class AccountController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateAccount(@PathVariable Integer id, @RequestBody Account account) {
         try {
-//            account.setUser_id(id);
-//            accountService.save(account);
+
             Account ac = accountService.updateAc(id, account);
             return ResponseEntity.ok("Đã sửa tài khoản có id là " + id);
         } catch (Exception e) {

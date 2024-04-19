@@ -11,5 +11,5 @@ public interface SubjectClassService {
     SubjectClass save(SubjectClass sc);
 
     void deleteById(Integer integer);
-//   SubjectClass updateSc(Integer id ,SubjectClass ac);
+    SubjectClass updateSc(Integer id ,SubjectClass ac);
 }

@@ -29,12 +29,22 @@ public class SubjectClassController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSubjectClassyId(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteSubjectClassById(@PathVariable Integer id) {
         try {
             subjectClassService.deleteById(id);
             return ResponseEntity.ok("Đã xóa lớp môn học có id là " + id);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Lỗi trong quá trình xóa");
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateSubjectClass(@PathVariable Integer id, @RequestBody SubjectClass subjectClass) {
+        try {
+            SubjectClass sc = subjectClassService.updateSc(id, subjectClass);
+            return ResponseEntity.ok("Đã sửa lớp môn học có id là " + id);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình cập nhật ");
         }
     }
 

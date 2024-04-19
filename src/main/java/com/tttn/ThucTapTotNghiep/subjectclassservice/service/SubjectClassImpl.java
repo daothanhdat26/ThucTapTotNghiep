@@ -30,14 +30,18 @@ public class SubjectClassImpl implements SubjectClassService {
         subjectClassReponsitory.deleteById(id);
     }
 
-//    @Override
-//    public Account updateSc(Integer id, SubjectClass subjectClass){
-//        SubjectClass sc = subjectClassReponsitory.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+id));
-//        sc.setSubject_name(subjectClass.getSubject_name());
-//
-//
-//
-//
-//    }
+    @Override
+    public SubjectClass updateSc(Integer id, SubjectClass subjectClass){
+        SubjectClass sc = subjectClassReponsitory.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+id));
+        sc.setSubject_name(subjectClass.getSubject_name());
+        sc.setCreated_by(subjectClass.getCreated_by());
+        sc.setCreated_at(subjectClass.getCreated_at());
+        sc.setSchool_year(subjectClass.getSchool_year());
+        sc.setNumber_of_group(subjectClass.getNumber_of_group());
+        sc.setMember_per_group(subjectClass.getMember_per_group());
+        sc.setGroup_register_method(subjectClass.getGroup_register_method());
+        subjectClassReponsitory.save(sc);
+        return sc;
+    }
 
 }

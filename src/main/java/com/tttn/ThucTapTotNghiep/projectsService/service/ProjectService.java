@@ -27,15 +27,16 @@ public class ProjectService {
     public String createProject(CreateProjectForm formData){
         Project project=new Project();
 
-        project.setCreatedBy(formData.getCreated_by());
-        project.setProjectName(formData.getProject_name());
-        project.setProjectDescription(formData.getProject_description());
-        project.setProjectOfGroup(formData.getProject_of_group());
+        project.setCreatedBy(formData.getCreatedBy());
+        project.setProjectName(formData.getProjectName());
+        project.setProjectDescription(formData.getProjectDescription());
+        project.setProjectOfGroup(formData.getProjectOfGroup());
 
         Timestamp timestamp=new Timestamp(System.currentTimeMillis());
         project.setCreatedAt(timestamp);
 
-        project.setExpiredDay(formData.getExpired_day());
+        project.setExpiredDay(formData.getExpiredDay());
+        project.setExpiredTime(formData.getExpiredTime());
 
         projectRepository.save(project);
         return "Created !";

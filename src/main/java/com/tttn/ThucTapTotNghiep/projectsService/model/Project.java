@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Getter
@@ -29,6 +30,8 @@ public class Project {
     @Column(name = "created_at")
     private Timestamp createdAt;
     @Column(name = "expired_day")
-    private Timestamp expiredDay;
+    private Date expiredDay;
+    @Column(name = "expired_time")
+    private Time expiredTime;
 
 }

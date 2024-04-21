@@ -4,14 +4,13 @@ import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
 public class SubjectClass {
     @Id
@@ -22,9 +21,8 @@ public class SubjectClass {
     @Column(name ="subject_name")
     private String subject_name;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", referencedColumnName = "user_id")
-    private Account created_by;
+    @Column(name = "created_by")
+    private int created_by;
 
     @Column(name ="created_at")
     private Timestamp created_at;
@@ -39,5 +37,6 @@ public class SubjectClass {
 
     @Column(name="group_register_method")
     private String group_register_method;
+
 
 }

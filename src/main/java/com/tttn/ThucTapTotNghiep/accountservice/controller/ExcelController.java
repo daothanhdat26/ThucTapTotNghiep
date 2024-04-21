@@ -19,7 +19,7 @@ import java.util.Iterator;
 @RequestMapping("/api/excel")
 public class ExcelController {
     @Autowired
-    private AccountService accountService;
+    AccountService accountService;
 
     @PostMapping
     public String importAccoutFromExcel(@RequestParam("file") MultipartFile multipartFile) {

@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -16,7 +15,7 @@ import java.util.Optional;
 @RequestMapping("/api/account")
 public class AccountController {
     @Autowired
-    private AccountService accountService;
+    AccountService accountService;
 
     @GetMapping
     public ResponseEntity<List<Account>> showAccount() {

@@ -1,15 +1,15 @@
 package com.tttn.ThucTapTotNghiep.subjectclassservice.controller;
 
-import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
-import com.tttn.ThucTapTotNghiep.accountservice.service.AccountService;
 import com.tttn.ThucTapTotNghiep.subjectclassservice.model.SubjectClass;
 import com.tttn.ThucTapTotNghiep.subjectclassservice.service.SubjectClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -17,7 +17,18 @@ import java.util.List;
 @RequestMapping("/api/class")
 public class SubjectClassController {
     @Autowired
-    private SubjectClassService subjectClassService;
+    SubjectClassService subjectClassService;
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get1SubjectClassById(@PathVariable Integer id) {
+        Optional<SubjectClass> subjectclass = subjectClassService.findById(id);
+        if (subjectclass.isPresent()) {
+            return ResponseEntity.ok(subjectclass.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không có SubjectClass với id: " + id);
+        }
+    }
     @GetMapping
     public ResponseEntity<List<SubjectClass>> showSubjectClass() {
         return ResponseEntity.ok().body(subjectClassService.findAll());

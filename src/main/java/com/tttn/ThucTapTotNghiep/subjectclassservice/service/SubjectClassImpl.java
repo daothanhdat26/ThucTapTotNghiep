@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,7 +23,23 @@ public class SubjectClassImpl implements SubjectClassService {
 
     @Override
     public SubjectClass save(SubjectClass sc) {
-        return subjectClassReponsitory.save(sc);
+        Timestamp timestamp=new Timestamp(System.currentTimeMillis());
+
+        SubjectClass subjectClass=new SubjectClass();
+
+        subjectClass.setCreated_at(timestamp);
+
+        subjectClass.setSubject_name(sc.getSubject_name());
+        subjectClass.setCreated_by(sc.getCreated_by());
+        subjectClass.setSchool_year(sc.getSchool_year());
+        subjectClass.setGroup_register_method(sc.getGroup_register_method());
+        subjectClass.setNumber_of_group(sc.getNumber_of_group());
+        subjectClass.setMember_per_group(sc.getMember_per_group());
+
+
+
+
+        return subjectClassReponsitory.save(subjectClass);
     }
 
     @Override
@@ -34,7 +51,10 @@ public class SubjectClassImpl implements SubjectClassService {
     public SubjectClass updateSc(Integer id, SubjectClass subjectClass){
         SubjectClass sc = subjectClassReponsitory.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+id));
         sc.setSubject_name(subjectClass.getSubject_name());
+
         sc.setCreated_by(subjectClass.getCreated_by());
+
+
         sc.setCreated_at(subjectClass.getCreated_at());
         sc.setSchool_year(subjectClass.getSchool_year());
         sc.setNumber_of_group(subjectClass.getNumber_of_group());

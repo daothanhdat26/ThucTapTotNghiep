@@ -10,4 +10,5 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project,Integer> {
     List<Project> findByProjectOfGroup(Integer projectOfGroup);
     Project findOneByProjectId(Integer projectId);
+    Boolean existsByProjectName(String projectName);
 }

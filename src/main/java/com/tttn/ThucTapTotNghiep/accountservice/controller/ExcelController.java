@@ -56,7 +56,12 @@ public class ExcelController {
                     String user_type = "SinhVien";
                     String user_fullname= hoCell.getStringCellValue()+" "+tenCell.getStringCellValue();
                     // Lưu vào database
-                     accountService.save(new Account(user_password,user_email,user_type,user_fullname));
+                    //Code luu
+
+                        // email da ton tai
+                        accountService.save(new Account(user_password,user_email,user_type,user_fullname));
+
+                    
                 }
             }
 

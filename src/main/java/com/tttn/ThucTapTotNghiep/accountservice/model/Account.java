@@ -3,10 +3,11 @@ package com.tttn.ThucTapTotNghiep.accountservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+
+
+
 @Entity
+@Table(name = "account")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +31,9 @@ public class Account {
         this.user_email = user_email;
         this.user_type = user_type;
         this.full_name = full_name;
+    }
+
+    public Account() {
     }
 
     public int getUser_id() {

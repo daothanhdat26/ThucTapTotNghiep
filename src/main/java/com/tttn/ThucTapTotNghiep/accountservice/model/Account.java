@@ -32,4 +32,6 @@ public class Account {
         this.type = type;
         this.fullName = fullName;
     }
+
+
 }

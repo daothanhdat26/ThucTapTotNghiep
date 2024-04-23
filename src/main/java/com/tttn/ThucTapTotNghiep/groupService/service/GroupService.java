@@ -66,4 +66,8 @@ public class GroupService {
     public ResponseEntity<List<Student>>findJoinedClassById(int userId){
         return new ResponseEntity<>(studentRepository.getStudentsByStudentId(userId),HttpStatus.OK);
     }
+
+    public void deleteSVByClassIdAndStudentId(Integer classId, Integer studentId) {
+        studentRepository.deleteByClassIdAndStudentId(classId,studentId);
+    }
 }

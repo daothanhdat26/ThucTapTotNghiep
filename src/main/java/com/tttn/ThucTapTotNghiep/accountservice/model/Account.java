@@ -12,24 +12,24 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int user_id;
+    private int userId;
 
     @Column(name ="user_password")
-    private String user_password;
+    private String password;
     @Column(name="user_email")
-    private String user_email;
+    private String email;
     @Column(name="user_type")
-    private  String user_type;
+    private  String type;
     @Column(name ="phone_number")
-    private String phone_number ;
+    private String phoneNumber ;
 
     @Column(name = "full_name")
-    private String full_name;
+    private String fullName;
 
-    public Account(String user_password, String user_email, String user_type, String full_name) {
-        this.user_password = user_password;
-        this.user_email = user_email;
-        this.user_type = user_type;
-        this.full_name = full_name;
+    public Account(String password, String email, String type,  String fullName) {
+        this.password = password;
+        this.email = email;
+        this.type = type;
+        this.fullName = fullName;
     }
 }

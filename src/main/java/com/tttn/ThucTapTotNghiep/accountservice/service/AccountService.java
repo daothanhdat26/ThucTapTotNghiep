@@ -94,16 +94,6 @@ public class AccountService {
 
                     // kiem tra email ton tai chua?
                     // neu chua ton tai thi moi luu
-//                    if (accountRepository.findByEmail(user_email) == null) {
-//                        accountRepository.save(new Account(user_password, user_email, user_type, user_fullname));
-////                        int userId =accountRepository.findUserIdByEmail(user_email);
-////                        studentRepository.save(new Student(idClass,userId));
-//                          int userId = accountRepository.findUserIdByEmail(user_email);
-//                       studentRepository.save(new Student(idClass,userId));
-//                    }else {
-//                        int userId = accountRepository.findUserIdByEmail(user_email);
-//                        studentRepository.save(new Student(idClass, userId));
-//                    }
                     if (accountRepository.findByEmail(user_email) == null) {
                         Account newAccount = new Account(user_password, user_email, user_type, user_fullname);
                         Account savedAccount = accountRepository.save(newAccount);

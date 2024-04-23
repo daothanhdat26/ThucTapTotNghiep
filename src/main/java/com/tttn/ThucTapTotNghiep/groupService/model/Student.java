@@ -17,6 +17,6 @@ public class Student {
     private int studentIndex;
     @Column(name = "class_id")
     private int classId;
-    @Column(name = "studentId")
+    @Column(name = "student_id")
     private int studentId;
 }

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "group")
+@Table(name = "group_list")
 public class Group {
     @Id
     @Column(name = "group_id")
@@ -20,7 +20,7 @@ public class Group {
     private int groupId;
     @Column(name = "leader_id")
     private int leaderId;
-    @Column(name = "subject_class")
+    @Column(name = "class_id")
     private int classId;
     @Column(name = "group_name")
     private String groupName;

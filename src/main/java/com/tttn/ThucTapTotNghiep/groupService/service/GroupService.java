@@ -2,8 +2,10 @@ package com.tttn.ThucTapTotNghiep.groupService.service;
 
 import com.tttn.ThucTapTotNghiep.groupService.model.Group;
 import com.tttn.ThucTapTotNghiep.groupService.model.GroupMember;
+import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.repository.GroupMemberRepository;
 import com.tttn.ThucTapTotNghiep.groupService.repository.GroupRepository;
+import com.tttn.ThucTapTotNghiep.groupService.repository.StudentRepository;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupInfo;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.MemberInfo;
 import jakarta.transaction.Transactional;
@@ -19,11 +21,14 @@ import java.util.List;
 public class GroupService {
     private GroupRepository groupRepository;
     private GroupMemberRepository groupMemberRepository;
+    private StudentRepository studentRepository;
 
-    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository) {
+    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, StudentRepository studentRepository) {
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
+        this.studentRepository = studentRepository;
     }
+
     public ResponseEntity<String>createGroupForClass(List<GroupInfo> groupList){
         for(GroupInfo groupInfo:groupList){
             Group newGroup=new Group();
@@ -54,5 +59,8 @@ public class GroupService {
     public ResponseEntity<String>updateGroupLeader(int classId,int groupId,int userId){
         groupRepository.updateGroupLeader(userId,classId,groupId);
         return new ResponseEntity<>("SUCCES",HttpStatus.OK);
+    }
+    public ResponseEntity<List<Student>>getStudentOfClass(int classId){
+        return new ResponseEntity<>(studentRepository.getStudentsByClassId(classId),HttpStatus.OK);
     }
 }

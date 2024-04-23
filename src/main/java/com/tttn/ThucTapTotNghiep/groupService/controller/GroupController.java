@@ -1,6 +1,7 @@
 package com.tttn.ThucTapTotNghiep.groupService.controller;
 
 
+import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.service.GroupService;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupInfo;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.MemberInfo;
@@ -36,5 +37,9 @@ public class GroupController {
     public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo){
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    //lấy danh saách học sinh của lớp theo classId
+    @GetMapping("/api/class/{classId}/student-list")
+    public ResponseEntity<List<Student>>getStudentListOfClass(@PathVariable Integer classId){
+        return groupService.getStudentOfClass(classId);
+    }
 }

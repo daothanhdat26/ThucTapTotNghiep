@@ -51,9 +51,11 @@ public class GroupController {
     public ResponseEntity<List<Student>>getJoinedClassOfUser(@PathVariable Integer userId){
         return groupService.findJoinedClassById(userId);
     }
+
     //Lay danh sach nhóm của lớp do
     @GetMapping("/api/class/{classId}/group-list")
     public ResponseEntity<List<Group>>getGroupListOfClass(@PathVariable Integer classId){
         return groupService.findGroupListByClassId(classId);
     }
+
 }

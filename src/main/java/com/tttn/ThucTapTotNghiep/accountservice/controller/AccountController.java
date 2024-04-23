@@ -52,9 +52,9 @@ public class AccountController {
         }
     }
 
-    @PostMapping("/excel")
-    public String importAccountFromExcel(@RequestParam("file") MultipartFile multipartFile) {
-        return accountService.importAccoutFromExcel(multipartFile);
+    @PostMapping("/{idClass}/excel")
+    public String importAccountFromExcel( @PathVariable Integer idClass  , @RequestParam("file") MultipartFile multipartFile) {
+        return accountService.importAccoutFromExcel(idClass,multipartFile);
     }
 
 }

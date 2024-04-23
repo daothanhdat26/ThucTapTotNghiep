@@ -11,4 +11,6 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
 
     public List<Student>getStudentsByClassId(Integer classId);
     public List<Student>getStudentsByStudentId(Integer studentId);
+
+    void deleteByClassIdAndStudentId(int classId, int studentId);
 }

@@ -67,6 +67,7 @@ public class GroupService {
     public ResponseEntity<List<Student>>findJoinedClassById(int userId){
         return new ResponseEntity<>(studentRepository.getStudentsByStudentId(userId),HttpStatus.OK);
     }
+
     public ResponseEntity<String>createSingleGroup(GroupInfo groupInfo){
         Group newGroup=new Group();
         newGroup.setGroupName(groupInfo.getGroupName());

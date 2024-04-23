@@ -19,4 +19,9 @@ public class Student {
     private int classId;
     @Column(name = "student_id")
     private int studentId;
+
+    public Student(int classId, int studentId) {
+        this.classId = classId;
+        this.studentId = studentId;
+    }
 }

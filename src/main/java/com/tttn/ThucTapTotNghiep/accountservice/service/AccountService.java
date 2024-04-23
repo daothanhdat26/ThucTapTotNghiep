@@ -2,6 +2,8 @@ package com.tttn.ThucTapTotNghiep.accountservice.service;
 
 import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.AccountRepository;
+import com.tttn.ThucTapTotNghiep.groupService.model.Student;
+import com.tttn.ThucTapTotNghiep.groupService.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,8 @@ import java.util.List;
 @Service
 public class AccountService {
     AccountRepository accountRepository;
+
+    StudentRepository studentRepository;
 
 
     public List<Account> findAll() {
@@ -54,7 +58,7 @@ public class AccountService {
     }
 
 
-    public String importAccoutFromExcel(@RequestParam("file") MultipartFile multipartFile) {
+    public String importAccoutFromExcel( Integer idClass,@RequestParam("file") MultipartFile multipartFile) {
         try {
             // Đọc file Excel
             InputStream inputStream = multipartFile.getInputStream();
@@ -90,9 +94,26 @@ public class AccountService {
 
                     // kiem tra email ton tai chua?
                     // neu chua ton tai thi moi luu
+//                    if (accountRepository.findByEmail(user_email) == null) {
+//                        accountRepository.save(new Account(user_password, user_email, user_type, user_fullname));
+////                        int userId =accountRepository.findUserIdByEmail(user_email);
+////                        studentRepository.save(new Student(idClass,userId));
+//                          int userId = accountRepository.findUserIdByEmail(user_email);
+//                       studentRepository.save(new Student(idClass,userId));
+//                    }else {
+//                        int userId = accountRepository.findUserIdByEmail(user_email);
+//                        studentRepository.save(new Student(idClass, userId));
+//                    }
                     if (accountRepository.findByEmail(user_email) == null) {
-                        accountRepository.save(new Account(user_password, user_email, user_type, user_fullname));
+                        Account newAccount = new Account(user_password, user_email, user_type, user_fullname);
+                        Account savedAccount = accountRepository.save(newAccount);
+                        // Lưu userId vào bảng student_list
+                        studentRepository.save(new Student(idClass, savedAccount.getUserId()));
+                    } else {
+                        int userId = accountRepository.findUserIdByEmail(user_email);
+                        studentRepository.save(new Student(idClass, userId));
                     }
+
                 }
             }
             // Đóng luồng

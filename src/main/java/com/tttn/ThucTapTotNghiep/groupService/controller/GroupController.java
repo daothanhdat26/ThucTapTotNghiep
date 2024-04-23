@@ -42,4 +42,8 @@ public class GroupController {
     public ResponseEntity<List<Student>>getStudentListOfClass(@PathVariable Integer classId){
         return groupService.getStudentOfClass(classId);
     }
+    @GetMapping("/api/user/{userId}/joined-class")
+    public ResponseEntity<List<Student>>getJoinedClassOfUser(@PathVariable Integer userId){
+        return groupService.findJoinedClassById(userId);
+    }
 }

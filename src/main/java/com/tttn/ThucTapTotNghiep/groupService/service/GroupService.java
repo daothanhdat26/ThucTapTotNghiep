@@ -63,4 +63,7 @@ public class GroupService {
     public ResponseEntity<List<Student>>getStudentOfClass(int classId){
         return new ResponseEntity<>(studentRepository.getStudentsByClassId(classId),HttpStatus.OK);
     }
+    public ResponseEntity<List<Student>>findJoinedClassById(int userId){
+        return new ResponseEntity<>(studentRepository.getStudentsByStudentId(userId),HttpStatus.OK);
+    }
 }

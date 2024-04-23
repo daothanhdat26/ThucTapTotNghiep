@@ -35,6 +35,7 @@ public class GroupService {
             Group newGroup=new Group();
             newGroup.setGroupName(groupInfo.getGroupName());
             newGroup.setClassId(groupInfo.getClassId());
+            newGroup.setLeaderId(groupInfo.getLeaderId());
 
 
             groupRepository.save(newGroup);

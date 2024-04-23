@@ -31,6 +31,7 @@ public class GroupController {
         return groupService.addGroupMemberFromList(memberList);
     }
     //cập nhật leader
+    //tam thoi tkhong dung dc
     @PutMapping("/api/class/{classId}/group/{groupId}/set-leader/{userId}")
     public ResponseEntity<String>updateGroupLeader(@PathVariable Integer classId,@PathVariable Integer groupId,@PathVariable Integer userId){
         return groupService.updateGroupLeader(classId,groupId,userId);

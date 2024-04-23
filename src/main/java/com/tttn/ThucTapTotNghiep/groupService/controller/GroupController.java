@@ -58,4 +58,15 @@ public class GroupController {
         return groupService.findGroupListByClassId(classId);
     }
 
+    // xoa sinh vien ra khoi liststudent
+    @DeleteMapping("/api/student-list/{classId}/{studentId}")
+    public ResponseEntity<String> deleteStudentByClassIdAndStudentId(@PathVariable int classId, @PathVariable int studentId) {
+        try {
+            groupService.deleteSVByClassIdAndStudentId(classId, studentId);
+            return ResponseEntity.ok("Đã xóa sinh viên có classId là " + classId + " và studentId là " + studentId);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình xóa");
+        }
+    }
+
 }

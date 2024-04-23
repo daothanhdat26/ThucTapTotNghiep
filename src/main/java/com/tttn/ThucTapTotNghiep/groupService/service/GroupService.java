@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,14 +35,14 @@ public class GroupService {
             Group newGroup=new Group();
             newGroup.setGroupName(groupInfo.getGroupName());
             newGroup.setClassId(groupInfo.getClassId());
+            newGroup.setLeaderId(groupInfo.getLeaderId());
+
 
             groupRepository.save(newGroup);
         }
         return new ResponseEntity<>("SUCCES", HttpStatus.CREATED);
     }
-    public List<Group> getGroupListByClass(int classId){
-        return groupRepository.getGroupByClassId(classId);
-    }
+
     public ResponseEntity<String>addGroupMemberFromList(List<MemberInfo> memberList){
         for(MemberInfo member:memberList){
             GroupMember newMember=new GroupMember();
@@ -57,7 +58,7 @@ public class GroupService {
         return new ResponseEntity<>("SUCCES", HttpStatus.CREATED);
     }
     public ResponseEntity<String>updateGroupLeader(int classId,int groupId,int userId){
-        groupRepository.updateGroupLeader(userId,classId,groupId);
+        //groupRepository.updateGroupLeader(userId,classId,groupId);
         return new ResponseEntity<>("SUCCES",HttpStatus.OK);
     }
     public ResponseEntity<List<Student>>getStudentOfClass(int classId){
@@ -67,7 +68,22 @@ public class GroupService {
         return new ResponseEntity<>(studentRepository.getStudentsByStudentId(userId),HttpStatus.OK);
     }
 
-    public void deleteSVByClassIdAndStudentId(Integer classId, Integer studentId) {
-        studentRepository.deleteByClassIdAndStudentId(classId,studentId);
+    public ResponseEntity<String>createSingleGroup(GroupInfo groupInfo){
+        Group newGroup=new Group();
+        newGroup.setGroupName(groupInfo.getGroupName());
+        newGroup.setClassId(groupInfo.getClassId());
+        newGroup.setLeaderId(groupInfo.getLeaderId());
+
+        groupRepository.save(newGroup);
+        return new ResponseEntity<String>(HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<List<Group>> findGroupListByClassId(Integer classId) {
+        List<Group>searchResult=new ArrayList<>();
+        searchResult=groupRepository.findAllByClassId(classId);
+        if(searchResult!=null){
+            return new ResponseEntity<>(searchResult,HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

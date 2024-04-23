@@ -12,5 +12,5 @@ import lombok.Setter;
 public class GroupInfo {
     private int classId;
     private String groupName;
-    private int groupLeader;
+    private int leaderId;
 }

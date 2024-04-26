@@ -1,15 +1,16 @@
 package com.tttn.ThucTapTotNghiep.groupService.controller;
 
 
+import com.tttn.ThucTapTotNghiep.accountservice.service.AccountDetailService;
 import com.tttn.ThucTapTotNghiep.groupService.model.Group;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.service.GroupService;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupInfo;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.MemberInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class GroupController {
     @Autowired
     GroupService groupService;
+    AccountDetailService accountDetailService;
 
     //tạo nhóm bằng danh sách
     @PostMapping("/api/class/create-groups")
@@ -37,15 +39,12 @@ public class GroupController {
         return groupService.updateGroupLeader(classId,groupId,userId);
     }
     //tao mot group
-    @PostMapping("api/class/create-a-group")
+    @PostMapping("/api/class/create-a-group")
     public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo){
         return groupService.createSingleGroup(groupInfo);
     }
     //lấy danh saách học sinh của lớp theo classId
-    @GetMapping("/api/class/{classId}/student-list")
-    public ResponseEntity<List<Student>>getStudentListOfClass(@PathVariable Integer classId){
-        return groupService.getStudentOfClass(classId);
-    }
+
     //lay danh sach lop da join
     @GetMapping("/api/user/{userId}/joined-class")
     public ResponseEntity<List<Student>>getJoinedClassOfUser(@PathVariable Integer userId){
@@ -59,7 +58,7 @@ public class GroupController {
     }
 
     // xoa sinh vien ra khoi liststudent
-    @DeleteMapping("/api/student-list/{classId}/{studentId}")
+    @DeleteMapping("/api/class/student-list/{classId}/{studentId}")
     public ResponseEntity<String> deleteStudentByClassIdAndStudentId(@PathVariable int classId, @PathVariable int studentId) {
         try {
             groupService.deleteSVByClassIdAndStudentId(classId, studentId);

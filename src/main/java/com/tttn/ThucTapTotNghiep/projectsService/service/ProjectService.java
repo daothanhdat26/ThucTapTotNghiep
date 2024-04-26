@@ -1,5 +1,6 @@
 package com.tttn.ThucTapTotNghiep.projectsService.service;
 
+import com.tttn.ThucTapTotNghiep.accountservice.repository.StudentDetailRepository;
 import com.tttn.ThucTapTotNghiep.projectsService.model.Project;
 import com.tttn.ThucTapTotNghiep.projectsService.model.ProjectLog;
 import com.tttn.ThucTapTotNghiep.projectsService.repository.ProjectLogRepository;
@@ -18,10 +19,12 @@ import java.util.List;
 public class ProjectService {
     ProjectRepository projectRepository;
     ProjectLogRepository projectLogRepository;
+    StudentDetailRepository studentDetailRepository;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectLogRepository projectLogRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectLogRepository projectLogRepository, StudentDetailRepository studentDetailRepository) {
         this.projectRepository = projectRepository;
         this.projectLogRepository = projectLogRepository;
+        this.studentDetailRepository = studentDetailRepository;
     }
 
     public String createProject(CreateProjectForm formData){

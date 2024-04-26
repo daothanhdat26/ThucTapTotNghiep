@@ -17,14 +17,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
-@AllArgsConstructor
+
 @Transactional
 @Service
 public class AccountService {
     AccountRepository accountRepository;
-
     StudentRepository studentRepository;
 
+    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository) {
+        this.accountRepository = accountRepository;
+        this.studentRepository = studentRepository;
+    }
 
     public List<Account> findAll() {
         return accountRepository.findAll();
@@ -116,4 +119,5 @@ public class AccountService {
             return "Đã xảy ra lỗi trong quá trình import dữ liệu từ file Excel";
         }
     }
+
 }

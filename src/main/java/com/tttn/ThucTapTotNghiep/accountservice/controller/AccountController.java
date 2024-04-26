@@ -1,7 +1,9 @@
 package com.tttn.ThucTapTotNghiep.accountservice.controller;
 
 import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
+import com.tttn.ThucTapTotNghiep.accountservice.service.AccountDetailService;
 import com.tttn.ThucTapTotNghiep.accountservice.service.AccountService;
+import com.tttn.ThucTapTotNghiep.accountservice.wrapper.StudentAccountDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 public class AccountController {
     @Autowired
     AccountService accountService;
+
 
     @GetMapping
     public ResponseEntity<List<Account>> showAccount() {
@@ -52,9 +55,9 @@ public class AccountController {
         }
     }
 
-    @PostMapping("/{idClass}/excel")
-    public String importAccountFromExcel( @PathVariable Integer idClass  , @RequestParam("file") MultipartFile multipartFile) {
-        return accountService.importAccoutFromExcel(idClass,multipartFile);
+    @PostMapping("/class/{classId}/excel")
+    public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
+        return accountService.importAccoutFromExcel(classId,multipartFile);
     }
 
 }

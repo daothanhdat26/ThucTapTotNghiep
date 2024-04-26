@@ -1,5 +1,8 @@
 package com.tttn.ThucTapTotNghiep.groupService.service;
 
+
+import com.tttn.ThucTapTotNghiep.accountservice.model.StudentDetail;
+import com.tttn.ThucTapTotNghiep.accountservice.repository.StudentDetailRepository;
 import com.tttn.ThucTapTotNghiep.groupService.model.Group;
 import com.tttn.ThucTapTotNghiep.groupService.model.GroupMember;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
@@ -23,6 +26,7 @@ public class GroupService {
     private GroupRepository groupRepository;
     private GroupMemberRepository groupMemberRepository;
     private StudentRepository studentRepository;
+
 
     public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, StudentRepository studentRepository) {
         this.groupRepository = groupRepository;
@@ -60,9 +64,6 @@ public class GroupService {
     public ResponseEntity<String>updateGroupLeader(int classId,int groupId,int userId){
         //groupRepository.updateGroupLeader(userId,classId,groupId);
         return new ResponseEntity<>("SUCCES",HttpStatus.OK);
-    }
-    public ResponseEntity<List<Student>>getStudentOfClass(int classId){
-        return new ResponseEntity<>(studentRepository.getStudentsByClassId(classId),HttpStatus.OK);
     }
     public ResponseEntity<List<Student>>findJoinedClassById(int userId){
         return new ResponseEntity<>(studentRepository.getStudentsByStudentId(userId),HttpStatus.OK);

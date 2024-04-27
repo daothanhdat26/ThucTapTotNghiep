@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -21,4 +20,9 @@ public class GroupMember {
     private int groupId;
     @Column(name = "member_id")
     private int memberId;
+
+    public GroupMember(int groupId, int memberId) {
+        this.groupId = groupId;
+        this.memberId = memberId;
+    }
 }

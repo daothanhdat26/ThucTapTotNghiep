@@ -9,14 +9,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "student")
 public class StudentDetail {
     @Id
     private int userId;
-    private String studentId;
-    private String studentClass;
+    private String studentId;//DH5200XXXX
+    private String studentClass;//D20XXXXX
+
+
 }

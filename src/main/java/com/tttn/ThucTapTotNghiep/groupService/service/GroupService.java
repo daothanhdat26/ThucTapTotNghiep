@@ -44,7 +44,7 @@ public class GroupService {
 
             groupRepository.save(newGroup);
         }
-        return new ResponseEntity<>("SUCCES", HttpStatus.CREATED);
+        return new ResponseEntity<>("SUCCES", HttpStatus.OK);
     }
 
     public ResponseEntity<String>addGroupMemberFromList(List<MemberInfo> memberList){
@@ -90,5 +90,10 @@ public class GroupService {
 
     public void deleteSVByClassIdAndStudentId(int classId, int studentId) {
         studentRepository.deleteByClassIdAndStudentId(classId, studentId);
+    }
+    public ResponseEntity<String> addMemberIntoGroup(int classId,int groupId,int accountId){
+        GroupMember newMember=new GroupMember(groupId,accountId);
+        groupMemberRepository.save(newMember);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

@@ -1,7 +1,9 @@
 package com.tttn.ThucTapTotNghiep.accountservice.service;
 
 import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
+import com.tttn.ThucTapTotNghiep.accountservice.model.StudentDetail;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.AccountRepository;
+import com.tttn.ThucTapTotNghiep.accountservice.repository.StudentDetailRepository;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,10 +25,12 @@ import java.util.List;
 public class AccountService {
     AccountRepository accountRepository;
     StudentRepository studentRepository;
+    StudentDetailRepository studentDetailRepository;
 
-    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository) {
+    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, StudentDetailRepository studentDetailRepository) {
         this.accountRepository = accountRepository;
         this.studentRepository = studentRepository;
+        this.studentDetailRepository = studentDetailRepository;
     }
 
     public List<Account> findAll() {
@@ -72,6 +76,7 @@ public class AccountService {
             int mssvColumnIndex = 2;
             int hoColumnIndex = 3;
             int tenColumnIndex =4;
+            int lopColumIndex=5;
 
             // Duyệt qua từng dòng trong file Excel
             Iterator<Row> rowIterator = sheet.iterator();
@@ -84,17 +89,19 @@ public class AccountService {
                 Cell mssvCell = row.getCell(mssvColumnIndex);
                 Cell hoCell = row.getCell(hoColumnIndex);
                 Cell tenCell = row.getCell(tenColumnIndex);
+                Cell lopCell = row.getCell(lopColumIndex);
 
 
-                if (mssvCell != null && hoCell != null && tenCell !=null) {
-                    if (mssvCell.getCellType() == CellType.BLANK && hoCell.getCellType() == CellType.BLANK && tenCell.getCellType() == CellType.BLANK) {
+                if (mssvCell != null && hoCell != null && tenCell !=null&&lopCell!=null) {
+                    if (mssvCell.getCellType() == CellType.BLANK && hoCell.getCellType() == CellType.BLANK && tenCell.getCellType() == CellType.BLANK&&lopCell.getCellType()==CellType.BLANK) {
                         continue;
                     }
                     String user_email =  mssvCell.getStringCellValue()+"@student.edu.vn";
                     String user_password = mssvCell.getStringCellValue();
                     String user_type = "SinhVien";
                     String user_fullname= hoCell.getStringCellValue()+" "+tenCell.getStringCellValue();
-
+                    String user_lop=lopCell.getStringCellValue();
+                    String user_studentId=mssvCell.getStringCellValue();
                     // kiem tra email ton tai chua?
                     // neu chua ton tai thi moi luu
                     if (accountRepository.findByEmail(user_email) == null) {
@@ -102,7 +109,10 @@ public class AccountService {
                         Account savedAccount = accountRepository.save(newAccount);
                         // Lưu userId vào bảng student_list
                         studentRepository.save(new Student(idClass, savedAccount.getUserId()));
+                        StudentDetail studentDetail = new StudentDetail(savedAccount.getUserId(),user_studentId,user_lop);
+                        studentDetailRepository.save(studentDetail);
                     } else {
+                        //them sinh vien vao lop
                         int userId = accountRepository.findUserIdByEmail(user_email);
                         studentRepository.save(new Student(idClass, userId));
                     }

@@ -8,6 +8,7 @@ import com.tttn.ThucTapTotNghiep.groupService.service.GroupService;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupInfo;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.MemberInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,11 @@ public class GroupController {
     public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo){
         return groupService.createSingleGroup(groupInfo);
     }
-    //lấy danh saách học sinh của lớp theo classId
+    //Them 1 thanh vien vào nhóm
+    @PostMapping("/api/class/{classId}/group/{groupId}/add-member/{accountId}")
+    public ResponseEntity<String>addOneMemberIntoGroup(@PathVariable Integer classId,@PathVariable Integer groupId,@PathVariable Integer accountId){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     //lay danh sach lop da join
     @GetMapping("/api/user/{userId}/joined-class")

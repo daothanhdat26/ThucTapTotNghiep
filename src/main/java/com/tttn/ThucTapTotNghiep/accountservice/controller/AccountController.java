@@ -26,10 +26,10 @@ public class AccountController {
     public ResponseEntity<List<Account>> showAccount() {
         return ResponseEntity.ok().body(accountService.findAll());
     }
-    //Han che su dung, khong co enCode password
+    //Han che su dung
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody Account ac) {
-        ac.setType(Role.GV);
+        //ac.setType(Role.GV);
         Account account = accountService.save(ac);
         return ResponseEntity.ok(account);
     }

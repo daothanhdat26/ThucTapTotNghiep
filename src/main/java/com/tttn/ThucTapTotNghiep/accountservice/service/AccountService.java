@@ -46,6 +46,9 @@ public class AccountService {
 
 
     public Account save(Account ac) {
+        String password=passwordEncoder.encode(ac.getPassword());
+        ac.setType(Role.GV);
+        ac.setPassword(password);
         return accountRepository.save(ac);
     }
 

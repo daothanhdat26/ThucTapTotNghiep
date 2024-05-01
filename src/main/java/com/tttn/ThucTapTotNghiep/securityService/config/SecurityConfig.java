@@ -19,6 +19,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final UserDetailsServiceImp userDetailsServiceImp;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    //Danh sach duong dan chi GV dc phep truy cap
+    private static final String[] GV_ACCESS={
+            "/api/class/"
+    };
+    //TUONG TU NHU TREN NHUNG LA ADMIN
+    private static final String[] ADMIN_ACCESS={
+            "/api/admin/"
+    };
 
     public SecurityConfig(UserDetailsServiceImp userDetailsServiceImp, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsServiceImp = userDetailsServiceImp;
@@ -32,6 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         req->req.requestMatchers("/api/authenticate/**","/**")
                                 .permitAll()
+                                .requestMatchers(GV_ACCESS).hasAnyAuthority("GV","ADMIN")
+                                .requestMatchers(ADMIN_ACCESS).hasAnyAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 ).userDetailsService(userDetailsServiceImp)

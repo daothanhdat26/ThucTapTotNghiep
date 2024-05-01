@@ -1,6 +1,7 @@
 package com.tttn.ThucTapTotNghiep.accountservice.service;
 
 import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
+import com.tttn.ThucTapTotNghiep.accountservice.model.Role;
 import com.tttn.ThucTapTotNghiep.accountservice.model.StudentDetail;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.AccountRepository;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.StudentDetailRepository;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,15 +25,19 @@ import java.util.List;
 @Transactional
 @Service
 public class AccountService {
-    AccountRepository accountRepository;
-    StudentRepository studentRepository;
-    StudentDetailRepository studentDetailRepository;
-
-    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, StudentDetailRepository studentDetailRepository) {
+    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, StudentDetailRepository studentDetailRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.studentRepository = studentRepository;
         this.studentDetailRepository = studentDetailRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
+    AccountRepository accountRepository;
+    StudentRepository studentRepository;
+    StudentDetailRepository studentDetailRepository;
+    PasswordEncoder passwordEncoder;
+
+
 
     public List<Account> findAll() {
         return accountRepository.findAll();
@@ -51,7 +57,7 @@ public class AccountService {
 
     public Account updateAc(Integer id, Account account){
         Account ac = accountRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co account voi id:"+id));
-        ac.setPassword(account.getPassword());
+        ac.setPassword(passwordEncoder.encode(account.getPassword()));
         ac.setEmail(account.getEmail());
         ac.setType(account.getType());
         ac.setPhoneNumber(account.getPhoneNumber());
@@ -105,7 +111,7 @@ public class AccountService {
                     // kiem tra email ton tai chua?
                     // neu chua ton tai thi moi luu
                     if (accountRepository.findByEmail(user_email) == null) {
-                        Account newAccount = new Account(user_password, user_email, user_type, user_fullname);
+                        Account newAccount = new Account(passwordEncoder.encode(user_password), user_email, Role.SV, user_fullname);
                         Account savedAccount = accountRepository.save(newAccount);
                         // Lưu userId vào bảng student_list
                         studentRepository.save(new Student(idClass, savedAccount.getUserId()));

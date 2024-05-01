@@ -19,19 +19,18 @@ public class Account {
     @Column(name="user_email")
     private String email;
     @Column(name="user_type")
-    private  String type;
+    @Enumerated(EnumType.STRING)
+    private  Role type;
     @Column(name ="phone_number")
     private String phoneNumber ;
 
     @Column(name = "full_name")
     private String fullName;
 
-    public Account(String password, String email, String type,  String fullName) {
+    public Account(String password, String email, Role type, String fullName) {
         this.password = password;
         this.email = email;
         this.type = type;
         this.fullName = fullName;
     }
-
-
 }

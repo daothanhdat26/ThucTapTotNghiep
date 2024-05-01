@@ -1,6 +1,7 @@
 package com.tttn.ThucTapTotNghiep.accountservice.controller;
 
 import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
+import com.tttn.ThucTapTotNghiep.accountservice.model.Role;
 import com.tttn.ThucTapTotNghiep.accountservice.service.AccountDetailService;
 import com.tttn.ThucTapTotNghiep.accountservice.service.AccountService;
 import com.tttn.ThucTapTotNghiep.accountservice.wrapper.StudentAccountDetail;
@@ -25,9 +26,10 @@ public class AccountController {
     public ResponseEntity<List<Account>> showAccount() {
         return ResponseEntity.ok().body(accountService.findAll());
     }
-
+    //Han che su dung, khong co enCode password
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody Account ac) {
+        ac.setType(Role.GV);
         Account account = accountService.save(ac);
         return ResponseEntity.ok(account);
     }

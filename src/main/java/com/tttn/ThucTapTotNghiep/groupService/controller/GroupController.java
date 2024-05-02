@@ -1,13 +1,13 @@
 package com.tttn.ThucTapTotNghiep.groupService.controller;
 
 
-import com.tttn.ThucTapTotNghiep.accountservice.service.AccountDetailService;
+
 import com.tttn.ThucTapTotNghiep.groupService.model.Group;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.service.GroupService;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupInfo;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.MemberInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tttn.ThucTapTotNghiep.securityService.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +18,8 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class GroupController {
-    @Autowired
     GroupService groupService;
-    AccountDetailService accountDetailService;
+    AuthenticationService authenticationService;
 
     //tạo nhóm bằng danh sách
     @PostMapping("/api/class/create-groups")
@@ -41,7 +40,8 @@ public class GroupController {
     }
     //tao mot group
     @PostMapping("/api/class/create-a-group")
-    public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo){
+    public ResponseEntity<String>createSingleGroup(@RequestBody GroupInfo groupInfo,@RequestHeader(value = "Authorization")String requestToken){
+        groupInfo.setLeaderId(authenticationService.getUserIdFromToken(requestToken));
         return groupService.createSingleGroup(groupInfo);
     }
     //Them 1 thanh vien vào nhóm

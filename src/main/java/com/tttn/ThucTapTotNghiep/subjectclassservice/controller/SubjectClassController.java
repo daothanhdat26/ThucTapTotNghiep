@@ -1,5 +1,6 @@
 package com.tttn.ThucTapTotNghiep.subjectclassservice.controller;
 
+import com.tttn.ThucTapTotNghiep.securityService.service.AuthenticationService;
 import com.tttn.ThucTapTotNghiep.subjectclassservice.model.SubjectClass;
 import com.tttn.ThucTapTotNghiep.subjectclassservice.service.SubjectClassService;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +14,15 @@ import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/class")
 public class SubjectClassController {
-    @Autowired
     SubjectClassService subjectClassService;
+    AuthenticationService authenticationService;
 
+    public SubjectClassController(SubjectClassService subjectClassService, AuthenticationService authenticationService) {
+        this.subjectClassService = subjectClassService;
+        this.authenticationService = authenticationService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get1SubjectClassById(@PathVariable Integer id) {
@@ -26,7 +30,7 @@ public class SubjectClassController {
         if (subjectclass.isPresent()) {
             return ResponseEntity.ok(subjectclass.get());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không có SubjectClass với id: " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NOT FOUND");
         }
     }
     @GetMapping
@@ -34,7 +38,8 @@ public class SubjectClassController {
         return ResponseEntity.ok().body(subjectClassService.findAll());
     }
     @PostMapping
-    public ResponseEntity<SubjectClass> createSubjectClass(@RequestBody SubjectClass sc) {
+    public ResponseEntity<SubjectClass> createSubjectClass(@RequestBody SubjectClass sc,@RequestHeader(value = "Authorization")String requestToken) {
+        sc.setCreated_by(authenticationService.getUserIdFromToken(requestToken));
         SubjectClass subjectClass = subjectClassService.save(sc);
         return ResponseEntity.ok(subjectClass);
     }

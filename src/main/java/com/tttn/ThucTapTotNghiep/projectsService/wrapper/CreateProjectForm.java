@@ -20,6 +20,4 @@ public class CreateProjectForm {
     private int createdBy;
     private Date expiredDay;
     private Time expiredTime;
-
-
 }

@@ -50,11 +50,13 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-//        User user=userRepo.findByUsername(request.getUsername()).orElseThrow();
-//        String token=jwtService.generateToken(user);
-//        return new AuthenticationResponse(token);
         var user=userRepo.findByUsername(request.getUsername()).orElseThrow();
         var token=jwtService.generateToken(user);
         return new AuthenticationResponse(token);
+    }
+    public Integer getUserIdFromToken(String token){
+        String username=jwtService.extractUsername(token.substring(7));
+        var user=userRepo.findByUsername(username);
+        return user.get().getId();
     }
 }

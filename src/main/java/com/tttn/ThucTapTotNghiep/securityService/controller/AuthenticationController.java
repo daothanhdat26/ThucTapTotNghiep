@@ -1,7 +1,6 @@
 package com.tttn.ThucTapTotNghiep.securityService.controller;
 
 
-import com.tttn.ThucTapTotNghiep.securityService.entity.User;
 import com.tttn.ThucTapTotNghiep.securityService.model.AuthenticationResponse;
 import com.tttn.ThucTapTotNghiep.securityService.model.LoginRequest;
 import com.tttn.ThucTapTotNghiep.securityService.model.RegisterRequest;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 public class AuthenticationController {
@@ -29,8 +29,9 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse>login(@RequestBody LoginRequest request){
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
-    @GetMapping("/api/test/token")
-    public ResponseEntity<String>testToken(){
-        return new ResponseEntity<String>("YOUR LOGGED",HttpStatus.OK);
+    @GetMapping("/api/authenticate/userId")
+    public ResponseEntity<String>getUserIdByToken(@RequestHeader(value = "Authorization")String token){
+        Integer id=authenticationService.getUserIdFromToken(token);
+        return new ResponseEntity<String>("UserId:"+id,HttpStatus.OK);
     }
 }

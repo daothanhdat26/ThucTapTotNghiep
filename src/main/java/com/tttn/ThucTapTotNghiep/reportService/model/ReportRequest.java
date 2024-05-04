@@ -12,12 +12,13 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 
+
+@Entity
+@Table(name = "report_request")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "report_request")
 public class ReportRequest {
     @Id
     @Column(name = "request_id")

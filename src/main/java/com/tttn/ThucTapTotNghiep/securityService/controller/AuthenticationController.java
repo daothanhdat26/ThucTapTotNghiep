@@ -30,8 +30,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
     @GetMapping("/api/authenticate/userId")
-    public ResponseEntity<String>getUserIdByToken(@RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<Integer>getUserIdByToken(@RequestHeader(value = "Authorization")String token){
         Integer id=authenticationService.getUserIdFromToken(token);
-        return new ResponseEntity<String>("UserId:"+id,HttpStatus.OK);
+        return new ResponseEntity<Integer>(id,HttpStatus.OK);
     }
 }

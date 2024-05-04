@@ -39,7 +39,7 @@ public class SubjectClassController {
     }
     @PostMapping
     public ResponseEntity<SubjectClass> createSubjectClass(@RequestBody SubjectClass sc,@RequestHeader(value = "Authorization")String requestToken) {
-        sc.setCreated_by(authenticationService.getUserIdFromToken(requestToken));
+        sc.setCreatedBy(authenticationService.getUserIdFromToken(requestToken));
         SubjectClass subjectClass = subjectClassService.save(sc);
         return ResponseEntity.ok(subjectClass);
     }
@@ -62,6 +62,16 @@ public class SubjectClassController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Lỗi trong quá trình cập nhật ");
         }
+    }
+
+    @GetMapping("/createdBy/{userId}")
+    public List<SubjectClass> getClassCreatedBy(@PathVariable Integer userId) {
+        return subjectClassService.getClassByCreatedBy(userId);
+    }
+
+    @GetMapping("/studentId/{studentId}")
+    public List<SubjectClass> getClassByStudentId(@PathVariable Integer studentId){
+        return subjectClassService.getSubjectClassesByStudentId(studentId);
     }
 
 }

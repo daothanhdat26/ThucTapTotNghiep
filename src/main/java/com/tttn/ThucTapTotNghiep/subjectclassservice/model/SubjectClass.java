@@ -16,27 +16,27 @@ public class SubjectClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subject_class_id")
-    private int subject_class_id;
+    private int subjectClassId;
 
     @Column(name ="subject_name")
-    private String subject_name;
+    private String subjectName;
 
     @Column(name = "created_by")
-    private int created_by;
+    private int createdBy;
 
     @Column(name ="created_at")
-    private Timestamp created_at;
+    private Timestamp createdAt;
     @Column(name="school_year")
-    private String school_year;
+    private String schoolYear;
 
     @Column(name="number_of_group")
-    private int number_of_group;
+    private int numberOfGroup;
 
     @Column(name="member_per_group")
-    private int member_per_group;
+    private int memberPerGroup;
 
     @Column(name="group_register_method")
-    private String group_register_method;
+    private String groupRegisterMethod;
 
 
 }

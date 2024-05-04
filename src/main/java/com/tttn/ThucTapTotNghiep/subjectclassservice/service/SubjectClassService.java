@@ -2,6 +2,8 @@ package com.tttn.ThucTapTotNghiep.subjectclassservice.service;
 
 
 
+import com.tttn.ThucTapTotNghiep.groupService.model.Student;
+import com.tttn.ThucTapTotNghiep.groupService.repository.StudentRepository;
 import com.tttn.ThucTapTotNghiep.subjectclassservice.model.SubjectClass;
 import com.tttn.ThucTapTotNghiep.subjectclassservice.repository.SubjectClassReponsitory;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,12 +14,15 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Transactional
 @Service
 public class SubjectClassService  {
     SubjectClassReponsitory subjectClassReponsitory;
+
+    StudentRepository studentRepository;
 
 
 
@@ -32,7 +37,7 @@ public class SubjectClassService  {
 
     public SubjectClass save(SubjectClass sc) {
         Timestamp timestamp=new Timestamp(System.currentTimeMillis());
-        sc.setCreated_at(timestamp);
+        sc.setCreatedAt(timestamp);
         return subjectClassReponsitory.save(sc);
     }
 
@@ -43,15 +48,22 @@ public class SubjectClassService  {
 
     public SubjectClass updateSc(Integer id, SubjectClass subjectClass){
         SubjectClass sc = subjectClassReponsitory.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co lop hoc voi id:"+id));
-        sc.setSubject_name(subjectClass.getSubject_name());
-        sc.setCreated_by(subjectClass.getCreated_by());
-        sc.setCreated_at(subjectClass.getCreated_at());
-        sc.setSchool_year(subjectClass.getSchool_year());
-        sc.setNumber_of_group(subjectClass.getNumber_of_group());
-        sc.setMember_per_group(subjectClass.getMember_per_group());
-        sc.setGroup_register_method(subjectClass.getGroup_register_method());
+        sc.setSubjectName(subjectClass.getSubjectName());
+        sc.setCreatedBy(subjectClass.getCreatedBy());
+        sc.setCreatedAt(subjectClass.getCreatedAt());
+        sc.setSchoolYear(subjectClass.getSchoolYear());
+        sc.setNumberOfGroup(subjectClass.getNumberOfGroup());
+        sc.setMemberPerGroup(subjectClass.getMemberPerGroup());
+        sc.setGroupRegisterMethod(subjectClass.getGroupRegisterMethod());
         subjectClassReponsitory.save(sc);
         return sc;
     }
 
+    public List<SubjectClass> getClassByCreatedBy(Integer userId) {
+        return subjectClassReponsitory.findByCreatedBy(userId);
+    }
+
+    public List<SubjectClass> getSubjectClassesByStudentId(int studentId) {
+        return subjectClassReponsitory.findByStudentId(studentId);
+    }
 }

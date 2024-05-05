@@ -22,7 +22,10 @@ public class AuthenticationController {
 
     }
     @PostMapping("/api/authenticate/register")
-    public ResponseEntity<AuthenticationResponse>register(@RequestBody RegisterRequest request){
+    public ResponseEntity<?>register(@RequestBody RegisterRequest request){
+        if(authenticationService.checkExistUser(request)){
+            return new ResponseEntity<String>("EXIST USER",HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.ok(authenticationService.register(request));
     }
     @PostMapping("/api/authenticate/login")

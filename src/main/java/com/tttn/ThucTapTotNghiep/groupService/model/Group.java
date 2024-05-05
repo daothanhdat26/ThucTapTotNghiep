@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -24,4 +23,10 @@ public class Group {
     private int classId;
     @Column(name = "group_name")
     private String groupName;
+
+    public Group(int leaderId, int classId, String groupName) {
+        this.leaderId = leaderId;
+        this.classId = classId;
+        this.groupName = groupName;
+    }
 }

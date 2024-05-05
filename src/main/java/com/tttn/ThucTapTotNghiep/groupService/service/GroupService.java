@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 @Service
@@ -95,5 +96,33 @@ public class GroupService {
         GroupMember newMember=new GroupMember(groupId,accountId);
         groupMemberRepository.save(newMember);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    public void assignStudentsToRandomGroups(int classId,int numberOfGroup,int memberPerGroup){
+        List<Student>studentList=studentRepository.getStudentsByClassId(classId);
+        for(int i =1;i<=numberOfGroup;i++){
+            String groupName="Nhóm "+i;
+            Group group=new Group(0,classId,groupName);
+            Group newGroup=groupRepository.save(group);
+            for (int j =1;j<=memberPerGroup;j++){
+                if(studentList.isEmpty()){
+                    break;
+                }
+                int index=randomNumber(studentList.size());
+                Student student=studentList.get(index);
+                GroupMember newMember=new GroupMember(newGroup.getGroupId(), student.getStudentId());
+                groupMemberRepository.save(newMember);
+                studentList.remove(student);
+            }
+        }
+        //return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    public static Integer randomNumber(int max){
+        if (max <= 0) {
+            return 0;
+        }
+        Random rand = new Random();
+        int randomNumber = rand.nextInt(max);
+        return randomNumber;
     }
 }

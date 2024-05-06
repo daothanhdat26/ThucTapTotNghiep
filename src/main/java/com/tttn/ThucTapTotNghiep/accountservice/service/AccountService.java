@@ -7,6 +7,10 @@ import com.tttn.ThucTapTotNghiep.accountservice.repository.AccountRepository;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.StudentDetailRepository;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.repository.StudentRepository;
+import com.tttn.ThucTapTotNghiep.groupService.service.GroupService;
+import com.tttn.ThucTapTotNghiep.subjectclassservice.model.SubjectClass;
+import com.tttn.ThucTapTotNghiep.subjectclassservice.repository.SubjectClassReponsitory;
+import com.tttn.ThucTapTotNghiep.subjectclassservice.service.SubjectClassService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -21,23 +25,27 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Transactional
 @Service
 public class AccountService {
-    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, StudentDetailRepository studentDetailRepository, PasswordEncoder passwordEncoder) {
-        this.accountRepository = accountRepository;
-        this.studentRepository = studentRepository;
-        this.studentDetailRepository = studentDetailRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     AccountRepository accountRepository;
     StudentRepository studentRepository;
     StudentDetailRepository studentDetailRepository;
+    SubjectClassReponsitory subjectClassReponsitory;
     PasswordEncoder passwordEncoder;
+    GroupService groupService;
 
-
+    public AccountService(AccountRepository accountRepository, StudentRepository studentRepository, StudentDetailRepository studentDetailRepository, SubjectClassReponsitory subjectClassReponsitory, PasswordEncoder passwordEncoder, GroupService groupService) {
+        this.accountRepository = accountRepository;
+        this.studentRepository = studentRepository;
+        this.studentDetailRepository = studentDetailRepository;
+        this.subjectClassReponsitory = subjectClassReponsitory;
+        this.passwordEncoder = passwordEncoder;
+        this.groupService = groupService;
+    }
 
     public List<Account> findAll() {
         return accountRepository.findAll();
@@ -132,6 +140,11 @@ public class AccountService {
             workbook.close();
             inputStream.close();
 
+            //Luu group theo random
+            Optional<SubjectClass> subjectClass=subjectClassReponsitory.findById(idClass);
+            if(subjectClass.isPresent()&& Objects.equals(subjectClass.get().getGroupRegisterMethod(), "RANDOM")){
+                groupService.assignStudentsToRandomGroups(idClass,subjectClass.get().getNumberOfGroup(),subjectClass.get().getMemberPerGroup());
+            }
             return "Dữ liệu đã được import thành công";
         } catch (Exception e) {
             e.printStackTrace();

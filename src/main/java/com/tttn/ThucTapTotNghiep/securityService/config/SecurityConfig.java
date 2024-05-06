@@ -40,7 +40,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         req->req.requestMatchers("/api/authenticate/**","/**")
                                 .permitAll()
-                                .requestMatchers(GV_ACCESS).hasAnyAuthority("GV","ADMIN")
                                 .requestMatchers(ADMIN_ACCESS).hasAnyAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()

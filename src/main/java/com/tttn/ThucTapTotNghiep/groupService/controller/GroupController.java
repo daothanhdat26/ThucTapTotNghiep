@@ -73,5 +73,14 @@ public class GroupController {
             return ResponseEntity.status(500).body("Lỗi trong quá trình xóa");
         }
     }
-
+    // xoa nhom
+    @DeleteMapping("/api/group/{groupId}")
+    public ResponseEntity<String> deleteGroupById(@PathVariable Integer groupId) {
+        try {
+            groupService.deleteGroupById(groupId);
+            return ResponseEntity.ok("Đã xóa nhóm có id là " + groupId);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình xóa nhóm");
+        }
+    }
 }

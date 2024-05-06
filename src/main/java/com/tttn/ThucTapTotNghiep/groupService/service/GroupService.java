@@ -96,4 +96,7 @@ public class GroupService {
         groupMemberRepository.save(newMember);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    public void deleteGroupById(Integer id) {
+        groupRepository.deleteById(id);
+    }
 }

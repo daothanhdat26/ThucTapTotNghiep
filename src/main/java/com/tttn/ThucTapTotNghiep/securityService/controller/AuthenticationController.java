@@ -22,7 +22,10 @@ public class AuthenticationController {
 
     }
     @PostMapping("/api/authenticate/register")
-    public ResponseEntity<AuthenticationResponse>register(@RequestBody RegisterRequest request){
+    public ResponseEntity<?>register(@RequestBody RegisterRequest request){
+        if(authenticationService.checkExistUser(request)){
+            return new ResponseEntity<String>("EXIST USER",HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.ok(authenticationService.register(request));
     }
     @PostMapping("/api/authenticate/login")
@@ -30,8 +33,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
     @GetMapping("/api/authenticate/userId")
-    public ResponseEntity<String>getUserIdByToken(@RequestHeader(value = "Authorization")String token){
+    public ResponseEntity<Integer>getUserIdByToken(@RequestHeader(value = "Authorization")String token){
         Integer id=authenticationService.getUserIdFromToken(token);
-        return new ResponseEntity<String>("UserId:"+id,HttpStatus.OK);
+        return new ResponseEntity<Integer>(id,HttpStatus.OK);
     }
 }

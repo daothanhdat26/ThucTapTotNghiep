@@ -73,6 +73,13 @@ public class GroupController {
             return ResponseEntity.status(500).body("Lỗi trong quá trình xóa");
         }
     }
+
+    @GetMapping("/api-test/random/{classId}")
+    public ResponseEntity<?>testRandomGroup(@PathVariable Integer classId){
+        groupService.assignStudentsToRandomGroups(classId,4,4);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     // xoa nhom
     @DeleteMapping("/api/group/{groupId}")
     public ResponseEntity<String> deleteGroupById(@PathVariable Integer groupId) {
@@ -83,4 +90,5 @@ public class GroupController {
             return ResponseEntity.status(500).body("Lỗi trong quá trình xóa nhóm");
         }
     }
+
 }

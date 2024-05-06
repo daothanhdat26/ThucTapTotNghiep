@@ -7,6 +7,9 @@ import com.tttn.ThucTapTotNghiep.securityService.model.LoginRequest;
 import com.tttn.ThucTapTotNghiep.securityService.model.RegisterRequest;
 import com.tttn.ThucTapTotNghiep.securityService.model.Role;
 import com.tttn.ThucTapTotNghiep.securityService.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@Transactional
 public class AuthenticationService {
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
@@ -58,5 +62,11 @@ public class AuthenticationService {
         String username=jwtService.extractUsername(token.substring(7));
         var user=userRepo.findByUsername(username);
         return user.get().getId();
+    }
+    public Boolean checkExistUser(RegisterRequest request){
+        if(userRepo.existsUsersByUsername(request.getUsername())){
+            return true;
+        }
+        return false;
     }
 }

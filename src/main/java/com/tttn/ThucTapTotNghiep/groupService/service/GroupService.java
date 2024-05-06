@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 @Service
@@ -34,9 +35,9 @@ public class GroupService {
         this.studentRepository = studentRepository;
     }
 
-    public ResponseEntity<String>createGroupForClass(List<GroupInfo> groupList){
-        for(GroupInfo groupInfo:groupList){
-            Group newGroup=new Group();
+    public ResponseEntity<String> createGroupForClass(List<GroupInfo> groupList) {
+        for (GroupInfo groupInfo : groupList) {
+            Group newGroup = new Group();
             newGroup.setGroupName(groupInfo.getGroupName());
             newGroup.setClassId(groupInfo.getClassId());
             newGroup.setLeaderId(groupInfo.getLeaderId());
@@ -47,9 +48,9 @@ public class GroupService {
         return new ResponseEntity<>("SUCCES", HttpStatus.OK);
     }
 
-    public ResponseEntity<String>addGroupMemberFromList(List<MemberInfo> memberList){
-        for(MemberInfo member:memberList){
-            GroupMember newMember=new GroupMember();
+    public ResponseEntity<String> addGroupMemberFromList(List<MemberInfo> memberList) {
+        for (MemberInfo member : memberList) {
+            GroupMember newMember = new GroupMember();
             newMember.setMemberId(member.getAccountId());
 
             Group groupInfo = groupRepository.findGroupByGroupName(member.getGroupName());
@@ -61,16 +62,18 @@ public class GroupService {
 
         return new ResponseEntity<>("SUCCES", HttpStatus.CREATED);
     }
-    public ResponseEntity<String>updateGroupLeader(int classId,int groupId,int userId){
+
+    public ResponseEntity<String> updateGroupLeader(int classId, int groupId, int userId) {
         //groupRepository.updateGroupLeader(userId,classId,groupId);
-        return new ResponseEntity<>("SUCCES",HttpStatus.OK);
-    }
-    public ResponseEntity<List<Student>>findJoinedClassById(int userId){
-        return new ResponseEntity<>(studentRepository.getStudentsByStudentId(userId),HttpStatus.OK);
+        return new ResponseEntity<>("SUCCES", HttpStatus.OK);
     }
 
-    public ResponseEntity<String>createSingleGroup(GroupInfo groupInfo){
-        Group newGroup=new Group();
+    public ResponseEntity<List<Student>> findJoinedClassById(int userId) {
+        return new ResponseEntity<>(studentRepository.getStudentsByStudentId(userId), HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> createSingleGroup(GroupInfo groupInfo) {
+        Group newGroup = new Group();
         newGroup.setGroupName(groupInfo.getGroupName());
         newGroup.setClassId(groupInfo.getClassId());
         newGroup.setLeaderId(groupInfo.getLeaderId());
@@ -80,10 +83,10 @@ public class GroupService {
     }
 
     public ResponseEntity<List<Group>> findGroupListByClassId(Integer classId) {
-        List<Group>searchResult=new ArrayList<>();
-        searchResult=groupRepository.findAllByClassId(classId);
-        if(searchResult!=null){
-            return new ResponseEntity<>(searchResult,HttpStatus.FOUND);
+        List<Group> searchResult = new ArrayList<>();
+        searchResult = groupRepository.findAllByClassId(classId);
+        if (searchResult != null) {
+            return new ResponseEntity<>(searchResult, HttpStatus.FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -91,12 +94,49 @@ public class GroupService {
     public void deleteSVByClassIdAndStudentId(int classId, int studentId) {
         studentRepository.deleteByClassIdAndStudentId(classId, studentId);
     }
-    public ResponseEntity<String> addMemberIntoGroup(int classId,int groupId,int accountId){
-        GroupMember newMember=new GroupMember(groupId,accountId);
+
+    public ResponseEntity<String> addMemberIntoGroup(int classId, int groupId, int accountId) {
+        GroupMember newMember = new GroupMember(groupId, accountId);
         groupMemberRepository.save(newMember);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+
+
+    public void assignStudentsToRandomGroups ( int classId, int numberOfGroup, int memberPerGroup){
+            List<Student> studentList = studentRepository.getStudentsByClassId(classId);
+            for (int i = 1; i <= numberOfGroup; i++) {
+                String groupName = "Nhóm " + i;
+                Group group = new Group(0, classId, groupName);
+                Group newGroup = groupRepository.save(group);
+                for (int j = 1; j <= memberPerGroup; j++) {
+                    if (studentList.isEmpty()) {
+                        break;
+                    }
+                    int index = randomNumber(studentList.size());
+                    Student student = studentList.get(index);
+                    GroupMember newMember = new GroupMember(newGroup.getGroupId(), student.getStudentId());
+                    groupMemberRepository.save(newMember);
+                    studentList.remove(student);
+                }
+            }
+            //return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+
+
+        public static Integer randomNumber ( int max){
+            if (max <= 0) {
+                return 0;
+            }
+            Random rand = new Random();
+            int randomNumber = rand.nextInt(max);
+            return randomNumber;
+
+        }
+
+
     public void deleteGroupById(Integer id) {
         groupRepository.deleteById(id);
     }
+
 }

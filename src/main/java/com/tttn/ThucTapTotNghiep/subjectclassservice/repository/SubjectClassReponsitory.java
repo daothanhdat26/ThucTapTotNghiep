@@ -13,4 +13,5 @@ public interface SubjectClassReponsitory extends JpaRepository<SubjectClass,Inte
     List<SubjectClass> findByCreatedBy(Integer userId);
     @Query("SELECT sc FROM SubjectClass sc JOIN Student sl ON sc.subjectClassId = sl.classId WHERE sl.studentId = ?1")
     List<SubjectClass> findByStudentId(int studentId);
+
 }

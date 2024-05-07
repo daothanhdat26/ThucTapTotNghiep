@@ -2,6 +2,7 @@ package com.tttn.ThucTapTotNghiep.groupService.controller;
 
 
 
+import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
 import com.tttn.ThucTapTotNghiep.groupService.model.Group;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.service.GroupService;
@@ -88,6 +89,16 @@ public class GroupController {
             return ResponseEntity.ok("Đã xóa nhóm có id là " + groupId);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Lỗi trong quá trình xóa nhóm");
+        }
+    }
+    //sua nhom
+    @PutMapping("/api/group/{groupId}")
+    public ResponseEntity<String> updateGroup(@PathVariable Integer id, @RequestBody Group group) {
+        try {
+            Group gr = groupService.updateGroup(id, group);
+            return ResponseEntity.ok("Đã sửa nhóm có id là " + id);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình sửa");
         }
     }
 

@@ -1,13 +1,23 @@
 package com.tttn.ThucTapTotNghiep.reportService.service;
 
 
+import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
+import com.tttn.ThucTapTotNghiep.reportService.model.ReportRequest;
+import com.tttn.ThucTapTotNghiep.reportService.model.ReportSubmit;
 import com.tttn.ThucTapTotNghiep.reportService.respository.ReportSubmitRepository;
 import com.tttn.ThucTapTotNghiep.reportService.respository.ReportRequestRepository;
 import com.tttn.ThucTapTotNghiep.reportService.wrapper.ReportForm;
+import com.tttn.ThucTapTotNghiep.reportService.wrapper.SubmitForm;
 import com.tttn.ThucTapTotNghiep.securityService.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.sql.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReportService {
@@ -19,8 +29,77 @@ public class ReportService {
         this.reportRequestRepository = reportRequestRepository;
         this.authenticationService = authenticationService;
     }
-    public ResponseEntity<?>saveReportRequest(ReportForm formData,String requestToken){
-        
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ReportRequest saveReportRequest(ReportRequest reportRequest,String requestToken){
+        int userId = authenticationService.getUserIdFromToken(requestToken);
+        reportRequest.setCreatedBy(userId);
+        Timestamp timestamp=new Timestamp(System.currentTimeMillis());
+        reportRequest.setCreatedAt(timestamp);
+        return reportRequestRepository.save(reportRequest);
     }
+
+
+    public String deleteReportRequest(Integer id){
+        if(reportRequestRepository.existsById(id)){
+            reportRequestRepository.deleteById(id);
+            return "Xoa Thanh cong!";
+        }
+        return "Khong tim thay!";
+    }
+
+public String updateReportRequest(Integer id, ReportForm reportForm) {
+    Optional<ReportRequest> optionalReportRequest = reportRequestRepository.findById(id);
+    if (optionalReportRequest.isPresent()) {
+        ReportRequest existingReportRequest = optionalReportRequest.get();
+        existingReportRequest.setExpiredTime(reportForm.getExpiredTime());
+        existingReportRequest.setExpiredDate(reportForm.getExpiredDate());
+        existingReportRequest.setExpiredAction(reportForm.getExpiredAction());
+        existingReportRequest.setRequestTile(reportForm.getRequestTile());
+        existingReportRequest.setRequestDescription(reportForm.getRequestDescription());
+        reportRequestRepository.save(existingReportRequest);
+        return "Sửa thành công!";
+    } else {
+        return "Không tìm thấy!";
+    }
+}
+
+    public List<ReportRequest> getAllReportRequest() {
+        return reportRequestRepository.findAll();
+    }
+
+    public List<ReportRequest> getReportRequestsBySubjectClass(Integer classId) {
+        return reportRequestRepository.findBySubjectClass(classId);
+    }
+
+public String saveReportSubmit(Integer requestId, String reportTitle, String reportDescription, MultipartFile attachment, String requestToken) {
+    if (reportRequestRepository.existsById(requestId)) {
+        int userId = authenticationService.getUserIdFromToken(requestToken);
+
+        ReportSubmit reportSubmit = new ReportSubmit();
+        reportSubmit.setSubmitBy(userId);
+        reportSubmit.setSubmitOfRequest(requestId);
+        reportSubmit.setReportTitle(reportTitle);
+        reportSubmit.setReportDescription(reportDescription);
+        Date currentDate = new Date(System.currentTimeMillis());
+        reportSubmit.setCreatedDate(currentDate);
+        Time currentTime = new Time(System.currentTimeMillis());
+        reportSubmit.setCreatedTime(currentTime);
+
+        try {
+            if (attachment != null && !attachment.isEmpty()) {
+                byte[] fileBytes = attachment.getBytes();
+                Blob blob = new javax.sql.rowset.serial.SerialBlob(fileBytes);
+                reportSubmit.setAttachment(blob);
+            }
+        } catch (IOException | SQLException ex) {
+            ex.printStackTrace();
+            return "Đã xảy ra lỗi khi xử lý tệp đính kèm.";
+        }
+
+        reportSubmitRepository.save(reportSubmit);
+        return "Nộp báo cáo thành công!";
+    }
+    return "Không tìm thấy báo cáo có id: " + requestId + " để nộp!";
+}
+
+
 }

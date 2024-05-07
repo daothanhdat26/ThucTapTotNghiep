@@ -1,6 +1,7 @@
 package com.tttn.ThucTapTotNghiep.groupService.service;
 
 
+import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
 import com.tttn.ThucTapTotNghiep.accountservice.model.StudentDetail;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.StudentDetailRepository;
 import com.tttn.ThucTapTotNghiep.groupService.model.Group;
@@ -11,6 +12,7 @@ import com.tttn.ThucTapTotNghiep.groupService.repository.GroupRepository;
 import com.tttn.ThucTapTotNghiep.groupService.repository.StudentRepository;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupInfo;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.MemberInfo;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -138,5 +140,15 @@ public class GroupService {
     public void deleteGroupById(Integer id) {
         groupRepository.deleteById(id);
     }
+
+    public Group updateGroup(Integer id, Group group){
+        Group gr = groupRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Khong co group voi id:"+id));
+        gr.setLeaderId(group.getLeaderId());
+        gr.setClassId(group.getClassId());
+        gr.setGroupName(group.getGroupName());
+        groupRepository.save(gr);
+        return gr;
+    }
+
 
 }

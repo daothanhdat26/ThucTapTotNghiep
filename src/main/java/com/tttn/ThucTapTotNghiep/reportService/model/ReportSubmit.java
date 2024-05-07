@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Blob;
 import java.sql.Date;
 import java.sql.Time;
 
@@ -32,6 +33,6 @@ public class ReportSubmit {
     private Date createdDate;
     @Column(name="created_time")
     private Time createdTime;
-    @Column(name = "attachement")
-    private String attachment;
+    @Column(name = "attachment")
+    private Blob attachment;
 }

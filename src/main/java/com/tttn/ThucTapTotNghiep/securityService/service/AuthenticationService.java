@@ -61,7 +61,10 @@ public class AuthenticationService {
     public Integer getUserIdFromToken(String token){
         String username=jwtService.extractUsername(token.substring(7));
         var user=userRepo.findByUsername(username);
-        return user.get().getId();
+        if(user.isPresent()){
+            return user.get().getId();
+        }
+        return 0;
     }
     public Boolean checkExistUser(RegisterRequest request){
         if(userRepo.existsUsersByUsername(request.getUsername())){

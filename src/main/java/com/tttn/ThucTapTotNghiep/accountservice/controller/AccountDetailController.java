@@ -32,6 +32,7 @@ public class AccountDetailController {
     }
     @GetMapping("/api/account/token-detail")
     public ResponseEntity<?>getAccountInfoByToken(@RequestHeader(value = "Authorization")String token){
-        return new ResponseEntity<>(HttpStatus.OK);
+        int userId=authenticationService.getUserIdFromToken(token);
+        return accountDetailService.getAccountDetail(userId);
     }
 }

@@ -1,19 +1,24 @@
 package com.tttn.ThucTapTotNghiep.accountservice.service;
 
 import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
+import com.tttn.ThucTapTotNghiep.accountservice.model.Role;
 import com.tttn.ThucTapTotNghiep.accountservice.model.StudentDetail;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.AccountRepository;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.StudentDetailRepository;
 import com.tttn.ThucTapTotNghiep.accountservice.wrapper.StudentAccountDetail;
+import com.tttn.ThucTapTotNghiep.accountservice.wrapper.TeacherAccountDetail;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.repository.StudentRepository;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.StudentInfo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -57,6 +62,17 @@ public class AccountDetailService {
         }
         return result;
     }
-
+    public ResponseEntity<?>getAccountDetail(int accountId){
+        Optional<Account> account=accountRepository.findById(accountId);
+        if(account.isPresent()&&account.get().getType()== Role.GV){
+            TeacherAccountDetail accountDetail=new TeacherAccountDetail(account.get().getUserId(),account.get().getFullName(),account.get().getEmail(),account.get().getPhoneNumber());
+            return new ResponseEntity<TeacherAccountDetail>(accountDetail,HttpStatus.OK);
+        }
+        if(account.isPresent()&&account.get().getType()== Role.SV){
+            StudentAccountDetail accountDetail=getStudentAccountDetail(accountId);
+            return new ResponseEntity<StudentAccountDetail>(accountDetail,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
 }

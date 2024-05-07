@@ -3,6 +3,8 @@ package com.tttn.ThucTapTotNghiep.groupService.service;
 
 import com.tttn.ThucTapTotNghiep.accountservice.model.StudentDetail;
 import com.tttn.ThucTapTotNghiep.accountservice.repository.StudentDetailRepository;
+import com.tttn.ThucTapTotNghiep.accountservice.service.AccountDetailService;
+import com.tttn.ThucTapTotNghiep.accountservice.wrapper.StudentAccountDetail;
 import com.tttn.ThucTapTotNghiep.groupService.model.Group;
 import com.tttn.ThucTapTotNghiep.groupService.model.GroupMember;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
@@ -10,7 +12,10 @@ import com.tttn.ThucTapTotNghiep.groupService.repository.GroupMemberRepository;
 import com.tttn.ThucTapTotNghiep.groupService.repository.GroupRepository;
 import com.tttn.ThucTapTotNghiep.groupService.repository.StudentRepository;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupInfo;
+import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupMemberInfo;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.MemberInfo;
+import com.tttn.ThucTapTotNghiep.subjectclassservice.model.SubjectClass;
+import com.tttn.ThucTapTotNghiep.subjectclassservice.repository.SubjectClassReponsitory;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -27,12 +33,15 @@ public class GroupService {
     private GroupRepository groupRepository;
     private GroupMemberRepository groupMemberRepository;
     private StudentRepository studentRepository;
+    private SubjectClassReponsitory subjectClassReponsitory;
+    private AccountDetailService accountDetailService;
 
-
-    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, StudentRepository studentRepository) {
+    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, StudentRepository studentRepository, SubjectClassReponsitory subjectClassReponsitory, AccountDetailService accountDetailService) {
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.studentRepository = studentRepository;
+        this.subjectClassReponsitory = subjectClassReponsitory;
+        this.accountDetailService = accountDetailService;
     }
 
     public ResponseEntity<String>createGroupForClass(List<GroupInfo> groupList){
@@ -66,8 +75,17 @@ public class GroupService {
         //groupRepository.updateGroupLeader(userId,classId,groupId);
         return new ResponseEntity<>("SUCCES",HttpStatus.OK);
     }
-    public ResponseEntity<List<Student>>findJoinedClassById(int userId){
-        return new ResponseEntity<>(studentRepository.getStudentsByStudentId(userId),HttpStatus.OK);
+    public ResponseEntity<?>findJoinedClassById(int userId){
+        List<Student>joinedList=studentRepository.findByStudentId(userId);
+        List<SubjectClass>result=new ArrayList<>();
+        for (Student joined:joinedList){
+            Optional<SubjectClass> joinedClass =subjectClassReponsitory.findById(joined.getClassId());
+            joinedClass.ifPresent(result::add);
+        }
+        if (result.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<SubjectClass>>(result,HttpStatus.OK);
     }
 
     public ResponseEntity<String>createSingleGroup(GroupInfo groupInfo){
@@ -124,5 +142,32 @@ public class GroupService {
         Random rand = new Random();
         int randomNumber = rand.nextInt(max);
         return randomNumber;
+    }
+    public ResponseEntity<?> studentJoinGroup(int accountId,int classId,int groupId){
+        Optional<SubjectClass> subjectClass=subjectClassReponsitory.findById(classId);
+        Optional<Group> group=groupRepository.findById(groupId);
+        if(subjectClass.isPresent()&&group.isPresent()){
+            List<GroupMember>memberList=groupMemberRepository.findAllByGroupId(group.get().getGroupId());
+            if(memberList.size()<subjectClass.get().getMemberPerGroup()){
+                GroupMember newMember=new GroupMember(groupId,accountId);
+                groupMemberRepository.save(newMember);
+                return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
+            }
+            return new ResponseEntity<String>("GROUP FULL",HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    public List<GroupMemberInfo>findSortedByGroup(int classId){
+        List<GroupMemberInfo>resultList=new ArrayList<>();
+        List<Group>groupList=groupRepository.findAllByClassId(classId);
+        for(Group group:groupList){
+            List<GroupMember>memberList=groupMemberRepository.findAllByGroupId(group.getGroupId());
+            for (GroupMember member:memberList){
+                StudentAccountDetail memberDetail=accountDetailService.getStudentAccountDetail(member.getMemberId());
+                GroupMemberInfo memberInfo=new GroupMemberInfo(group.getGroupId(),group.getGroupName(),member.getMemberId(), memberDetail.getFullName(), memberDetail.getStudentId());
+                resultList.add(memberInfo);
+            }
+        }
+        return resultList;
     }
 }

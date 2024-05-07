@@ -21,9 +21,13 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class GroupController {
-    @Autowired
     GroupService groupService;
     AuthenticationService authenticationService;
+
+    public GroupController(GroupService groupService, AuthenticationService authenticationService) {
+        this.groupService = groupService;
+        this.authenticationService = authenticationService;
+    }
 
     //tạo nhóm bằng danh sách
     @PostMapping("/api/class/create-groups")

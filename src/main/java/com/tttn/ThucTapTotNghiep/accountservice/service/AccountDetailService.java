@@ -37,7 +37,18 @@ public class AccountDetailService {
 
     public StudentAccountDetail getStudentAccountDetail(int userId){
         Account account=accountRepository.getOne(userId);
-        StudentDetail studentDetail=studentDetailRepository.getOne(userId);
+        Optional<StudentDetail> findStudent=studentDetailRepository.findById(userId);
+        if(findStudent.isPresent()){
+            StudentDetail studentDetail=findStudent.get();
+            StudentAccountDetail accountDetail = new StudentAccountDetail(account.getUserId(),
+                    account.getFullName(),
+                    studentDetail.getStudentId(),
+                    studentDetail.getStudentClass(),
+                    account.getEmail(),
+                    account.getPhoneNumber());
+            return accountDetail;
+        }
+        StudentDetail studentDetail=new StudentDetail(userId,"NOTFOUND","NOTFOUND");
         StudentAccountDetail accountDetail = new StudentAccountDetail(account.getUserId(),
                 account.getFullName(),
                 studentDetail.getStudentId(),

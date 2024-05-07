@@ -34,7 +34,7 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
-
+    // xoa tai khoan
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteHAccountById(@PathVariable Integer id) {
         try {
@@ -45,7 +45,7 @@ public class AccountController {
         }
     }
 
-
+    //sua tai khoan
     @PutMapping("/{id}")
     public ResponseEntity<String> updateAccount(@PathVariable Integer id, @RequestBody Account account) {
         try {
@@ -56,10 +56,11 @@ public class AccountController {
             return ResponseEntity.status(500).body("Lỗi trong quá trình cập nhật tài khoản");
         }
     }
-
+    // tao account bang file excel
     @PostMapping("/class/{classId}/excel")
     public String importAccountFromExcel(@PathVariable Integer classId,@RequestParam("file") MultipartFile multipartFile) {
         return accountService.importAccoutFromExcel(classId,multipartFile);
     }
+
 
 }

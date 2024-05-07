@@ -27,7 +27,7 @@ public class ReportRequest {
     @Column(name = "created_by")
     private int createdBy;
     @Column(name = "subject_class")
-    private int subjectCLass;
+    private int subjectClass;
     @Column(name = "request_of_project")
     private int requestOfProject;
     @Column(name = "created_at")

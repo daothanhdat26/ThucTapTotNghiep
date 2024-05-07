@@ -2,11 +2,11 @@ package com.tttn.ThucTapTotNghiep.groupService.controller;
 
 
 
+import com.tttn.ThucTapTotNghiep.accountservice.model.Account;
 import com.tttn.ThucTapTotNghiep.groupService.model.Group;
 import com.tttn.ThucTapTotNghiep.groupService.model.Student;
 import com.tttn.ThucTapTotNghiep.groupService.service.GroupService;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupInfo;
-import com.tttn.ThucTapTotNghiep.groupService.wrapper.GroupMemberInfo;
 import com.tttn.ThucTapTotNghiep.groupService.wrapper.MemberInfo;
 import com.tttn.ThucTapTotNghiep.securityService.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,8 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class GroupController {
+    @Autowired
     GroupService groupService;
-    AuthenticationService authenticationService;
-
-    public GroupController(GroupService groupService, AuthenticationService authenticationService) {
-        this.groupService = groupService;
-        this.authenticationService = authenticationService;
-    }
 
     //tạo nhóm bằng danh sách
     @PostMapping("/api/class/create-groups")
@@ -54,12 +49,12 @@ public class GroupController {
     //Them 1 thanh vien vào nhóm
     @PostMapping("/api/class/{classId}/group/{groupId}/add-member/{accountId}")
     public ResponseEntity<String>addOneMemberIntoGroup(@PathVariable Integer classId,@PathVariable Integer groupId,@PathVariable Integer accountId){
-        return groupService.addMemberIntoGroup(classId,groupId,accountId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //lay danh sach lop da join
     @GetMapping("/api/user/{userId}/joined-class")
-    public ResponseEntity<?>getJoinedClassOfUser(@PathVariable Integer userId){
+    public ResponseEntity<List<Student>>getJoinedClassOfUser(@PathVariable Integer userId){
         return groupService.findJoinedClassById(userId);
     }
 
@@ -79,22 +74,32 @@ public class GroupController {
             return ResponseEntity.status(500).body("Lỗi trong quá trình xóa");
         }
     }
+
     @GetMapping("/api-test/random/{classId}")
     public ResponseEntity<?>testRandomGroup(@PathVariable Integer classId){
         groupService.assignStudentsToRandomGroups(classId,4,4);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    //cho sinh vien join group
-    @PostMapping("/api/class/{classId}/group/{groupId}/join-group")
-    public ResponseEntity<?>studentJoinGroup(@PathVariable Integer classId,@PathVariable Integer groupId,@RequestHeader(value = "Authorization")String token){
-        int accountId=authenticationService.getUserIdFromToken(token);
-        if(accountId!=0){
-            return groupService.studentJoinGroup(accountId,classId,groupId);
+
+    // xoa nhom
+    @DeleteMapping("/api/group/{groupId}")
+    public ResponseEntity<String> deleteGroupById(@PathVariable Integer groupId) {
+        try {
+            groupService.deleteGroupById(groupId);
+            return ResponseEntity.ok("Đã xóa nhóm có id là " + groupId);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình xóa nhóm");
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    @GetMapping("/api/class/{classId}/student-group-sorted")
-    public ResponseEntity<?>getSortedByGroupList(@PathVariable Integer classId){
-        return new ResponseEntity<List<GroupMemberInfo>>(groupService.findSortedByGroup(classId),HttpStatus.OK);
+    //sua nhom
+    @PutMapping("/api/group/{groupId}")
+    public ResponseEntity<String> updateGroup(@PathVariable Integer id, @RequestBody Group group) {
+        try {
+            Group gr = groupService.updateGroup(id, group);
+            return ResponseEntity.ok("Đã sửa nhóm có id là " + id);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi trong quá trình sửa");
+        }
     }
+
 }

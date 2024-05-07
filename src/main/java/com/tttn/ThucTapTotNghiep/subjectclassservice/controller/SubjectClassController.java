@@ -74,4 +74,5 @@ public class SubjectClassController {
         return subjectClassService.getSubjectClassesByStudentId(studentId);
     }
 
+
 }
